@@ -56,22 +56,24 @@ function sortForDay(day: string) {
     return (playerA1Ts ?? Number.MAX_SAFE_INTEGER) - (playerB1Ts ?? Number.MAX_SAFE_INTEGER);
   }) 
 }
-function renderUnixTimestamp(ts: number): string {
+function renderUnixTimestamp(ts: number, day: string): string {
   if (ts === undefined) {
     return '';
   }
+  debugger;
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  var date = new Date(ts * 1000);
-  // Hours part from the timestamp
-  var hours = date.getHours();
-  // Minutes part from the timestamp
-  var minutes = "0" + date.getMinutes();
-  // Seconds part from the timestamp
-  var seconds = "0" + date.getSeconds();
-
+  const date0Ms = new Date(2021, 11, parseInt(day), 6, 0, 0, 0).getTime();
+  const finishTime = new Date(ts * 1000).getTime();
+  const diff = finishTime - date0Ms;
+  const hourInMs = 1000*60*60;
+  const minuteInMs = 1000*60;
+  const secondInMs = 1000;
+  const playerHours = Math.floor(diff/hourInMs);
+  const playerMinutes = Math.floor((diff%hourInMs)/minuteInMs);
+  const playerSeconds = Math.floor((diff%minuteInMs)/secondInMs);
   // Will display time in 10:30:23 format
-  var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  var formattedTime = playerHours + ':' + playerMinutes.toString().padStart(2, "0")+ ':' + playerSeconds.toString().padStart(2, "0");
   return formattedTime
 }
 
@@ -80,7 +82,7 @@ function renderPlayer(player: any, selectedDay: string, idx: number) {
   console.log(selectedDay);
   return (
     <div className="privboard-row">
-      <span className="privboard-position">{idx+1})</span> {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number)} / {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number)} <span className="privboard-name">{player.name}</span></div>
+      <span className="privboard-position">{idx+1})</span> {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)} <span className="privboard-name">{player.name}</span></div>
   )
 }
 
