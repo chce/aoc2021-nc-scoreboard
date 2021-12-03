@@ -3,13 +3,13 @@ import scores from './scores.json';
 import './App.css';
 
 let days = new Array(25).fill(false);
-const numEnabledDays = 2;
+const numEnabledDays = 3;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = Object.entries(scores.members);
-sortForDay("2");
+sortForDay(""+numEnabledDays);
 function App() {
  
-  const [selectedDay, setSelectedDay] = useState<string>("2");
+  const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
   return (
     <div className="App">
       <header className="App-header">
@@ -60,7 +60,6 @@ function renderUnixTimestamp(ts: number, day: string): string {
   if (ts === undefined) {
     return '';
   }
-  debugger;
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
   const date0Ms = new Date(2021, 11, parseInt(day), 6, 0, 0, 0).getTime();
