@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import scores from './scores.json';
 import './App.css';
-
+enum HighscoreType {
+  BothStars = 'bothstars',
+  Delta = 'delta'
+}
+const hourInMs = 1000*60*60;
+const hourInS = 60*60;
+const minuteInMs = 1000*60;
+const minuteInS = 60;
+const secondInMs = 1000;
 let days = new Array(25).fill(false);
 const numEnabledDays = 3;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
-const playerList = Object.entries(scores.members);
-sortForDay(""+numEnabledDays);
+const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
+
+
 function App() {
- 
+  const [players, setPlayers] = useState<any[]>(playerList);
   const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
+  const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.BothStars);
   return (
     <div className="App">
       <header className="App-header">
@@ -20,17 +30,24 @@ function App() {
                 ev.preventDefault()
                 ev.stopPropagation();
                 setSelectedDay(""+(idx+1));
-                sortForDay(""+(idx+1));
+                setPlayers(sortPlayersForDay(""+(idx+1), selectedScoreType, players));
               }}>{idx+1}</a> : <span>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</span>
             })}
-            
-
           </span>
         </div>
       </header>
       <section>
-        {playerList.map((player, idx) => {
-          return renderPlayer(player[1], selectedDay, idx);
+      <select value={selectedScoreType} onChange={(ev) => {
+        const scoreType = ev.target.value as HighscoreType;
+        setSelectedScoreType(scoreType)
+        setPlayers(sortPlayersForDay(selectedDay, scoreType, players));
+      }}>
+              <option value={HighscoreType.BothStars}>Time to both stars</option>
+              <option value={HighscoreType.Delta}>Time between star 1 and 2</option>
+      </select>
+
+        {players.map((player, idx) => {
+          return renderPlayer(player[1], selectedDay, idx, selectedScoreType);
         })}
         
       </section>
@@ -40,8 +57,16 @@ function App() {
 function getNthStarTs(player: any, n: number, day: string) {
   return player.completion_day_level[day]?.[""+n]?.get_star_ts;
 }
-function sortForDay(day: string) {
-  playerList.sort((playerA, playerB) => {
+function sortPlayersForDay(day: string, highscoreType: HighscoreType, playerList: any[]): any[] {
+  switch(highscoreType) {
+    case HighscoreType.BothStars:
+      return bothStarsSort(day, playerList);
+    case HighscoreType.Delta:
+      return deltaDaySort(day, playerList);
+  }
+}
+function bothStarsSort(day: string, playerList: any[]): any[] {
+  return [...playerList].sort((playerA, playerB) => {
     const playerA2Ts = getNthStarTs(playerA[1], 2, day);
     const playerB2Ts = getNthStarTs(playerB[1], 2, day);
     const playerA1Ts = getNthStarTs(playerA[1], 1, day);
@@ -54,7 +79,23 @@ function sortForDay(day: string) {
       return Number.MAX_SAFE_INTEGER - playerB2Ts;
     }
     return (playerA1Ts ?? Number.MAX_SAFE_INTEGER) - (playerB1Ts ?? Number.MAX_SAFE_INTEGER);
-  }) 
+  });
+}
+function deltaDaySort(day: string, playerList: any[]) {
+  return [...playerList].sort((playerA, playerB) => {
+    const playerA2Ts = getNthStarTs(playerA[1], 2, day);
+    const playerB2Ts = getNthStarTs(playerB[1], 2, day);
+    const playerA1Ts = getNthStarTs(playerA[1], 1, day);
+    const playerB1Ts = getNthStarTs(playerB[1], 1, day);
+    if (playerA2Ts && playerB2Ts) {
+      return (playerA2Ts - playerA1Ts) - (playerB2Ts - playerB1Ts);
+    } else {if (playerA2Ts && !playerB2Ts) {
+      return (playerA2Ts - playerA1Ts) - Number.MAX_SAFE_INTEGER;
+    } else if (!playerA2Ts && playerB2Ts) {
+      return Number.MAX_SAFE_INTEGER - (playerB2Ts - playerB1Ts);
+    }}
+    return 0;
+  });
 }
 function renderUnixTimestamp(ts: number, day: string): string {
   if (ts === undefined) {
@@ -65,9 +106,7 @@ function renderUnixTimestamp(ts: number, day: string): string {
   const date0Ms = new Date(2021, 11, parseInt(day), 6, 0, 0, 0).getTime();
   const finishTime = new Date(ts * 1000).getTime();
   const diff = finishTime - date0Ms;
-  const hourInMs = 1000*60*60;
-  const minuteInMs = 1000*60;
-  const secondInMs = 1000;
+
   const playerHours = Math.floor(diff/hourInMs);
   const playerMinutes = Math.floor((diff%hourInMs)/minuteInMs);
   const playerSeconds = Math.floor((diff%minuteInMs)/secondInMs);
@@ -76,12 +115,48 @@ function renderUnixTimestamp(ts: number, day: string): string {
   return formattedTime
 }
 
-function renderPlayer(player: any, selectedDay: string, idx: number) {
+function renderPlayerTime(player: any, selectedDay: string, highscoreType: HighscoreType) {
+  if (highscoreType === HighscoreType.BothStars) {
+    return `${renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / ${renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)}`
+  } else if (highscoreType === HighscoreType.Delta) {
+    return renderPlayerDeltaTimestamp(player, selectedDay);
+
+  }
+}
+
+function renderPlayerDeltaTimestamp(player: any, selectedDay: string) {
+  const firstStarTime = player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts;
+  const secondStarTime = player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts;
+  if (secondStarTime === undefined) {
+    return '';
+  }
+  const deltaStarTime = secondStarTime - firstStarTime;
+  const playerHours = Math.floor(deltaStarTime/hourInS);
+  const playerMinutes = Math.floor((deltaStarTime%hourInS)/minuteInS);
+  const playerSeconds = Math.floor((deltaStarTime%minuteInS));
+  var formattedDelta = playerHours + ':' + playerMinutes.toString().padStart(2, "0")+ ':' + playerSeconds.toString().padStart(2, "0");
+  return formattedDelta;
+}
+
+function getPlacementClass(idx: number) {
+  switch(idx) {
+    case 0:
+      return 'privboard-star-both';
+    case 1:
+      return 'privboard-star-firstonly';
+    case 2:
+      return 'privboard-third';
+    default:
+      return '';
+  }
+}
+
+function renderPlayer(player: any, selectedDay: string, idx: number, highscoreType: HighscoreType) {
   console.log(player);
   console.log(selectedDay);
   return (
     <div className="privboard-row">
-      <span className="privboard-position">{idx+1})</span> {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)} <span className={`privboard-name ${idx === 0 ? 'privboard-star-both' : idx === 1 ? 'privboard-star-firstonly' : idx === 2 ? 'privboard-third' : ''}`}>{player.name}</span></div>
+      <span className="privboard-position">{idx+1})</span> {renderPlayerTime(player, selectedDay, highscoreType)} <span className={`privboard-name ${getPlacementClass(idx)}`}>{player.name}</span></div>
   )
 }
 
