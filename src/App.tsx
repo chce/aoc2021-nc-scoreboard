@@ -81,7 +81,7 @@ function renderPlayer(player: any, selectedDay: string, idx: number) {
   console.log(selectedDay);
   return (
     <div className="privboard-row">
-      <span className="privboard-position">{idx+1})</span> {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)} <span className="privboard-name">{player.name}</span></div>
+      <span className="privboard-position">{idx+1})</span> {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / {renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)} <span className={`privboard-name ${idx === 0 ? 'privboard-star-both' : idx === 1 ? 'privboard-star-firstonly' : idx === 2 ? 'privboard-third' : ''}`}>{player.name}</span></div>
   )
 }
 

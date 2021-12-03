@@ -474,6 +474,7 @@ form#settings input[type="checkbox"] ~ span {
 .privboard-star-unlocked  { color: #333333; }
 .privboard-star-firstonly { color: #9999cc; }
 .privboard-star-both      { color: #ffff66; }
+.privboard-third          { color: #b08d57; }
 .privboard-delbtn { opacity:.33; }
 .privboard-row:hover .privboard-delbtn { opacity:1; }
 
