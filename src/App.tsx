@@ -15,10 +15,15 @@ const secondInMs = 1000;
 let days = new Array(25).fill(false);
 const numEnabledDays = 6;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
-const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
-for (let i = 0; i < numEnabledDays; i++) {
-  insertStarGainsForDay(""+(i+1), playerList);
-}
+const playerList = initialiseScores(scores);
+
+function initialiseScores(scores: any) {
+  const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
+  for (let i = 0; i < numEnabledDays; i++) {
+    insertStarGainsForDay(""+(i+1), playerList);
+  }
+  return playerList;
+} 
 
 
 function App() {
@@ -48,9 +53,9 @@ function App() {
         setPlayers(sortPlayersForDay(selectedDay, scoreType, players));
       }}>
               <option value={HighscoreType.BothStars}>Time to both stars</option>
+              <option value={HighscoreType.FirstStar}>Time to first star</option>
               <option value={HighscoreType.Delta}>Time between star 1 and 2</option>
               <option value={HighscoreType.StarGain}>Points gained</option>
-              <option value={HighscoreType.FirstStar}>Time to first star</option>
       </select>
 
         {players.map((player, idx) => {
@@ -58,6 +63,9 @@ function App() {
         })}
         
       </section>
+      <aside>
+
+      </aside>
     </div>
   );
 }
@@ -142,13 +150,17 @@ function insertStarGainsForDay(day: string, playerList: any[]) {
   firstStarSortedList.forEach((player, idx, players) => {
     let dayCompletion = player[1].completion_day_level[day]?.["1"];
     if (dayCompletion) {
-      dayCompletion.star_gain = player[1].completion_day_level[day]?.["1"] ? players.length-idx : 0;
+      dayCompletion.star_gain = players.length-idx;
     }
   });
   secondStarSortedList.forEach((player, idx, players) => {
     let dayCompletion = player[1].completion_day_level[day]?.["2"];
     if (dayCompletion) {
-      dayCompletion.star_gain = player[1].completion_day_level[day]?.["2"] ? players.length-idx : 0;
+      dayCompletion.star_gain = players.length-idx;
+    } else if (player[1].completion_day_level[day]) {
+      player[1].completion_day_level[day]["2"] = {
+        star_gain: 0
+      }
     }
   });
 }
