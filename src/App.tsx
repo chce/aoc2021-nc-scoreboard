@@ -156,7 +156,7 @@ function renderPlayer(player: any, selectedDay: string, idx: number, highscoreTy
   console.log(selectedDay);
   return (
     <div className="privboard-row">
-      <span className="privboard-position">{idx+1})</span> {renderPlayerTime(player, selectedDay, highscoreType)} <span className={`privboard-name ${getPlacementClass(idx)}`}>{player.name}</span></div>
+      <span className="privboard-position">{idx+1})</span> {renderPlayerTime(player, selectedDay, highscoreType)} <span className={`privboard-name ${getPlacementClass(idx)} ${player.name === null ? 'leaderboard-anon' : ''}`}>{player.name ?? `(anonymous user #${player.id})`}</span></div>
   )
 }
 
