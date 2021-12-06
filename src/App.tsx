@@ -151,15 +151,24 @@ function insertStarGainsForDay(day: string, playerList: any[]) {
     let dayCompletion = player[1].completion_day_level[day]?.["1"];
     if (dayCompletion) {
       dayCompletion.star_gain = players.length-idx;
+    } else {
+      player[1].completion_day_level[day] = {
+        '1': {
+          star_gain: 0,
+        },
+      }
     }
   });
   secondStarSortedList.forEach((player, idx, players) => {
     let dayCompletion = player[1].completion_day_level[day]?.["2"];
     if (dayCompletion) {
       dayCompletion.star_gain = players.length-idx;
-    } else if (player[1].completion_day_level[day]) {
-      player[1].completion_day_level[day]["2"] = {
-        star_gain: 0
+    } else {
+      player[1].completion_day_level[day] = {
+        ...player[1].completion_day_level[day],
+        '2': {
+          star_gain: 0,
+        },
       }
     }
   });
@@ -223,8 +232,6 @@ function getPlacementClass(idx: number) {
 }
 
 function renderPlayer(player: any, selectedDay: string, idx: number, highscoreType: HighscoreType) {
-  console.log(player);
-  console.log(selectedDay);
   return (
     <div className="privboard-row">
       <span className="privboard-position">{idx+1})</span> {renderPlayerTime(player, selectedDay, highscoreType)} <span className={`privboard-name ${getPlacementClass(idx)} ${player.name === null ? 'leaderboard-anon' : ''}`}>{player.name ?? `(anonymous user #${player.id})`}</span></div>
