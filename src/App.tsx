@@ -3,7 +3,9 @@ import scores from './scores.json';
 import './App.css';
 enum HighscoreType {
   BothStars = 'bothstars',
-  Delta = 'delta'
+  Delta = 'delta',
+  StarGain = 'stargain',
+  FirstStar = 'firststar',
 }
 const hourInMs = 1000*60*60;
 const hourInS = 60*60;
@@ -14,6 +16,9 @@ let days = new Array(25).fill(false);
 const numEnabledDays = 6;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
+for (let i = 0; i < numEnabledDays; i++) {
+  insertStarGainsForDay(""+(i+1), playerList);
+}
 
 
 function App() {
@@ -44,6 +49,8 @@ function App() {
       }}>
               <option value={HighscoreType.BothStars}>Time to both stars</option>
               <option value={HighscoreType.Delta}>Time between star 1 and 2</option>
+              <option value={HighscoreType.StarGain}>Points gained</option>
+              <option value={HighscoreType.FirstStar}>Time to first star</option>
       </select>
 
         {players.map((player, idx) => {
@@ -63,6 +70,10 @@ function sortPlayersForDay(day: string, highscoreType: HighscoreType, playerList
       return bothStarsSort(day, playerList);
     case HighscoreType.Delta:
       return deltaDaySort(day, playerList);
+    case HighscoreType.StarGain:
+      return starGainSort(day, playerList);
+    case HighscoreType.FirstStar:
+      return firstStarSort(day, playerList);
   }
 }
 function bothStarsSort(day: string, playerList: any[]): any[] {
@@ -89,14 +100,59 @@ function deltaDaySort(day: string, playerList: any[]) {
     const playerB1Ts = getNthStarTs(playerB[1], 1, day);
     if (playerA2Ts && playerB2Ts) {
       return (playerA2Ts - playerA1Ts) - (playerB2Ts - playerB1Ts);
-    } else {if (playerA2Ts && !playerB2Ts) {
+    } else if (playerA2Ts && !playerB2Ts) {
       return (playerA2Ts - playerA1Ts) - Number.MAX_SAFE_INTEGER;
     } else if (!playerA2Ts && playerB2Ts) {
       return Number.MAX_SAFE_INTEGER - (playerB2Ts - playerB1Ts);
-    }}
+    }
     return 0;
   });
 }
+
+function starGainSort(day: string, playerList: any[]) {
+  return [...playerList].sort((playerA, playerB) => {
+    const playerA1Star = parseInt(playerA[1].completion_day_level[day]?.["1"]?.star_gain);
+    const playerA2Star = parseInt(playerA[1].completion_day_level[day]?.["2"]?.star_gain);
+    const playerAStarGain = playerA1Star + playerA2Star;
+    const playerB1Star = parseInt(playerB[1].completion_day_level[day]?.["1"]?.star_gain);
+    const playerB2Star = parseInt(playerB[1].completion_day_level[day]?.["2"]?.star_gain);
+    const playerBStarGain = playerB1Star + playerB2Star;
+    return playerBStarGain - playerAStarGain;
+  });
+}
+
+function firstStarSort(day: string, playerList: any[]) {
+  return [...playerList].sort((playerA, playerB) => {
+    const playerA1Ts = getNthStarTs(playerA[1], 1, day);
+    const playerB1Ts = getNthStarTs(playerB[1], 1, day);
+    if (playerA1Ts && playerB1Ts) {
+      return (playerA1Ts) - (playerB1Ts);
+    } else if (playerA1Ts && !playerB1Ts) {
+      return (playerA1Ts) - Number.MAX_SAFE_INTEGER;
+    } else if (!playerA1Ts && playerB1Ts) {
+      return Number.MAX_SAFE_INTEGER - (playerB1Ts - playerB1Ts);
+    }
+    return 0;
+  });
+}
+
+function insertStarGainsForDay(day: string, playerList: any[]) {
+  let firstStarSortedList = firstStarSort(day, playerList);
+  let secondStarSortedList = bothStarsSort(day, playerList);
+  firstStarSortedList.forEach((player, idx, players) => {
+    let dayCompletion = player[1].completion_day_level[day]?.["1"];
+    if (dayCompletion) {
+      dayCompletion.star_gain = player[1].completion_day_level[day]?.["1"] ? players.length-idx : 0;
+    }
+  });
+  secondStarSortedList.forEach((player, idx, players) => {
+    let dayCompletion = player[1].completion_day_level[day]?.["2"];
+    if (dayCompletion) {
+      dayCompletion.star_gain = player[1].completion_day_level[day]?.["2"] ? players.length-idx : 0;
+    }
+  });
+}
+
 function renderUnixTimestamp(ts: number, day: string): string {
   if (ts === undefined) {
     return '';
@@ -116,11 +172,14 @@ function renderUnixTimestamp(ts: number, day: string): string {
 }
 
 function renderPlayerTime(player: any, selectedDay: string, highscoreType: HighscoreType) {
-  if (highscoreType === HighscoreType.BothStars) {
+  if (highscoreType === HighscoreType.BothStars || highscoreType === HighscoreType.FirstStar) {
     return `${renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["1"]?.get_star_ts as number, selectedDay)} / ${renderUnixTimestamp(player.completion_day_level?.[selectedDay]?.["2"]?.get_star_ts as number, selectedDay)}`
   } else if (highscoreType === HighscoreType.Delta) {
     return renderPlayerDeltaTimestamp(player, selectedDay);
-
+  } else if (highscoreType === HighscoreType.StarGain) {
+    let star1Gain = player.completion_day_level?.[selectedDay]?.["1"]?.star_gain;
+    let star2Gain = player.completion_day_level?.[selectedDay]?.["2"]?.star_gain;
+    return <><span className="privboard-star-firstonly">{star1Gain}</span>{' / '}<span className="privboard-star-both">{star2Gain}</span>{' -> '}<span className="privboard-star-both">{(star1Gain??0)+(star2Gain??0)}</span></>;
   }
 }
 
