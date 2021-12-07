@@ -17,7 +17,18 @@ a {
   text-decoration: none;
   color: #009900;
 }
+.link-like-button {
+  text-decoration: none;
+  color: #009900;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
 a:hover, a:focus {
+  color: #99ff99;
+}
+.link-like-button:hover, .link-like-button:focus {
   color: #99ff99;
 }
 h1, h2 {
@@ -483,4 +494,18 @@ form#settings input[type="checkbox"] ~ span {
 }
 .sponsor {
   margin: 1em 0;
+}
+.score-input-aside {
+  position: absolute;
+  padding: 20px;
+  right: 0;
+  top: 0;
+
+}
+.score-input-aside label {
+  display: block;
+}
+
+.score-input-aside textarea {
+  width: 100%;
 }

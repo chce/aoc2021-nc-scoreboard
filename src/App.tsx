@@ -30,6 +30,8 @@ function App() {
   const [players, setPlayers] = useState<any[]>(playerList);
   const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
   const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.BothStars);
+  const [showScoreboardInput, setShowScoreboardInput] = useState<boolean>(false);
+  const [customJSON, setCustomJSON] = useState<string>('')
   return (
     <div className="App">
       <header className="App-header">
@@ -63,8 +65,16 @@ function App() {
         })}
         
       </section>
-      <aside>
-
+      <aside className="score-input-aside">
+        <label htmlFor="scoresinput">Insert custom scoreboard JSON<button className="link-like-button" onClick={() => setShowScoreboardInput(!showScoreboardInput)}>{showScoreboardInput ? '-' : '+'}</button></label>
+        {showScoreboardInput && <textarea id="scoresinput" value={customJSON} onChange={(ev) => {
+          setCustomJSON(ev.target.value)
+        }}></textarea>}
+        {showScoreboardInput && <button onClick={() => {
+          let parsedScore = JSON.parse(customJSON);
+          let playerList = initialiseScores(parsedScore);
+          setPlayers(playerList);
+        }}>Set scoreboard</button>}
       </aside>
     </div>
   );
