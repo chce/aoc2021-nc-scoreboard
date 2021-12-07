@@ -496,16 +496,46 @@ form#settings input[type="checkbox"] ~ span {
   margin: 1em 0;
 }
 .score-input-aside {
-  position: absolute;
-  padding: 20px;
+  position: fixed;
+  bottom: 0;
   right: 0;
-  top: 0;
-
+  padding: 20px;
+  top: unset;
 }
-.score-input-aside label {
+.score-input-aside::before {
+  z-index: -1;
+  content: "";
+  position: absolute;
   display: block;
+  left: -2px;
+  right: -2px;
+  top: 3px;
+  bottom: 0px;
+  border: 1px solid #333340;
+  background: #10101a;
+}
+@media only screen and (max-width: 750px) {
+
+  .score-input-aside label {
+    display: none;
+  }
+  .score-input-aside textarea {
+    display: none;
+  }
+  .score-input-aside.expanded label {
+    display: inline;
+  }
+  .score-input-aside.expanded textarea {
+    display: block;
+  }
+}
+
+.score-input-aside label {
+  display: inline;
 }
 
 .score-input-aside textarea {
   width: 100%;
+  display: block;
+  max-width: 320px;
 }

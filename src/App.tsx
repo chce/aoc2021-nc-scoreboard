@@ -65,8 +65,8 @@ function App() {
         })}
         
       </section>
-      <aside className="score-input-aside">
-        <label htmlFor="scoresinput">Insert custom scoreboard JSON<button className="link-like-button" onClick={() => setShowScoreboardInput(!showScoreboardInput)}>{showScoreboardInput ? '-' : '+'}</button></label>
+      <aside className={`score-input-aside ${showScoreboardInput ? 'expanded' : ''}`}>
+        <label htmlFor="scoresinput">Insert custom scoreboard JSON</label><button className="link-like-button" onClick={() => setShowScoreboardInput(!showScoreboardInput)}>{showScoreboardInput ? '-' : '+'}</button>
         {showScoreboardInput && <textarea id="scoresinput" value={customJSON} onChange={(ev) => {
           setCustomJSON(ev.target.value)
         }}></textarea>}
