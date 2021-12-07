@@ -13,7 +13,7 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-const numEnabledDays = 6;
+const numEnabledDays = 7;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = initialiseScores(scores);
 
