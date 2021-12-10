@@ -13,7 +13,8 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-const numEnabledDays = 9;
+let curDay = new Date( new Date().getTime() - 5 * 3600 * 1000).getUTCDate();
+const numEnabledDays = curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = initialiseScores(scores);
 
@@ -43,7 +44,7 @@ function App() {
                 ev.stopPropagation();
                 setSelectedDay(""+(idx+1));
                 setPlayers(sortPlayersForDay(""+(idx+1), selectedScoreType, players));
-              }}>{idx+1}</a> : <span>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</span>
+              }}>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</a> : <span>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</span>
             })}
           </span>
         </div>
