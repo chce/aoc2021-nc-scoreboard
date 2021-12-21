@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/aoc2021-nc-scoreboard/static/css/main.4d456ff8.chunk.css",
-    "main.js": "/aoc2021-nc-scoreboard/static/js/main.f7a9fa44.chunk.js",
-    "main.js.map": "/aoc2021-nc-scoreboard/static/js/main.f7a9fa44.chunk.js.map",
+    "main.css": "/aoc2021-nc-scoreboard/static/css/main.23b713cd.chunk.css",
+    "main.js": "/aoc2021-nc-scoreboard/static/js/main.554e30bb.chunk.js",
+    "main.js.map": "/aoc2021-nc-scoreboard/static/js/main.554e30bb.chunk.js.map",
     "runtime-main.js": "/aoc2021-nc-scoreboard/static/js/runtime-main.53e4bd18.js",
     "runtime-main.js.map": "/aoc2021-nc-scoreboard/static/js/runtime-main.53e4bd18.js.map",
     "static/js/2.85978f2b.chunk.js": "/aoc2021-nc-scoreboard/static/js/2.85978f2b.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.eb059dcf.chunk.js": "/aoc2021-nc-scoreboard/static/js/3.eb059dcf.chunk.js",
     "static/js/3.eb059dcf.chunk.js.map": "/aoc2021-nc-scoreboard/static/js/3.eb059dcf.chunk.js.map",
     "index.html": "/aoc2021-nc-scoreboard/index.html",
-    "static/css/main.4d456ff8.chunk.css.map": "/aoc2021-nc-scoreboard/static/css/main.4d456ff8.chunk.css.map",
+    "static/css/main.23b713cd.chunk.css.map": "/aoc2021-nc-scoreboard/static/css/main.23b713cd.chunk.css.map",
     "static/js/2.85978f2b.chunk.js.LICENSE.txt": "/aoc2021-nc-scoreboard/static/js/2.85978f2b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.53e4bd18.js",
     "static/js/2.85978f2b.chunk.js",
-    "static/css/main.4d456ff8.chunk.css",
-    "static/js/main.f7a9fa44.chunk.js"
+    "static/css/main.23b713cd.chunk.css",
+    "static/js/main.554e30bb.chunk.js"
   ]
 }
