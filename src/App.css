@@ -514,6 +514,12 @@ form#settings input[type="checkbox"] ~ span {
   border: 1px solid #333340;
   background: #10101a;
 }
+a.bold {
+  font-weight: bold;
+  color: #9f9;
+  text-shadow: 0 0 2px #9f9;
+
+}
 @media only screen and (max-width: 750px) {
 
   .score-input-aside label {

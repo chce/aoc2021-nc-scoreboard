@@ -39,7 +39,7 @@ function App() {
         <div className="privboard-row">
           <span className="privboard-days">
             {days.map((day, idx) => {
-              return day ? <a href="" onClick={(ev) => {
+              return day ? <a href="" className={""+(idx+1) === selectedDay ? 'bold':''} onClick={(ev) => {
                 ev.preventDefault()
                 ev.stopPropagation();
                 setSelectedDay(""+(idx+1));
