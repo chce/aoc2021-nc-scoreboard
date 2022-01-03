@@ -13,7 +13,7 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-let curDay = new Date( new Date().getTime() - 5 * 3600 * 1000).getUTCDate();
+let curDay = 25
 const numEnabledDays = curDay > 25 ? 25 : curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = initialiseScores(scores);
