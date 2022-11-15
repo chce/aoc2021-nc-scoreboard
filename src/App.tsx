@@ -13,7 +13,7 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-let curDay = 25
+let curDay = 1
 const numEnabledDays = curDay > 25 ? 25 : curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = initialiseScores(scores);
@@ -191,7 +191,7 @@ function renderUnixTimestamp(ts: number, day: string): string {
   }
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  const date0Ms = new Date(2021, 11, parseInt(day), 6, 0, 0, 0).getTime();
+  const date0Ms = new Date(2022, 11, parseInt(day), 6, 0, 0, 0).getTime();
   const finishTime = new Date(ts * 1000).getTime();
   const diff = finishTime - date0Ms;
 
