@@ -30,7 +30,7 @@ function initialiseScores(scores: any) {
 function App() {
   const [players, setPlayers] = useState<any[]>(playerList);
   const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
-  const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.BothStars);
+  const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.StarGain);
   const [showScoreboardInput, setShowScoreboardInput] = useState<boolean>(false);
   const [customJSON, setCustomJSON] = useState<string>('')
   return (
