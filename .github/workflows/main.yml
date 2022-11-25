@@ -1,0 +1,17 @@
+name: Refresh Feed
+on: [push]
+jobs:
+  update-scores:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Scores
+        uses: JamesIves/fetch-api-data-action@v2
+        with:
+          endpoint: https://adventofcode.com/2022/leaderboard/private/view/2252784.json
+          configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
+          save-location: '/src/scores.json'
+      - name: Publish to gh-pages
+        run: | 
+          npm ci
+          npm run deploy
+        
