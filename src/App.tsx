@@ -19,7 +19,7 @@ days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = initialiseScores(scores);
 
 function initialiseScores(scores: any) {
-  const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
+  const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.StarGain, Object.entries(scores.members));
   for (let i = 0; i < numEnabledDays; i++) {
     insertStarGainsForDay(""+(i+1), playerList);
   }
