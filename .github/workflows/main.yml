@@ -1,0 +1,41 @@
+name: Update Scores
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '30 6,7,8,12,16 * * *'
+jobs:
+  update-scores:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Fetch Scores
+        uses: JamesIves/fetch-api-data-action@v2
+        with:
+          endpoint: https://adventofcode.com/2022/leaderboard/private/view/2252784.json
+          configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
+          debug: true
+      - name: LSTwo
+        run: |
+          ls
+      - name: Overwrite scores.json
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: ./src/scores.json
+          contents: ${{env.fetch-api-data}}
+          write-mode: overwrite
+      - name: Install dependencies
+        run: |
+          npm i
+          npm run build
+      - name: Deploy with gh-pages
+        run: |
+          ls
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          ls
+          npm run deploy-gh-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        

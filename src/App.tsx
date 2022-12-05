@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import scores from './scores.json';
+import { useEffect, useState } from 'react';
 import './App.css';
 enum HighscoreType {
   BothStars = 'bothstars',
@@ -13,10 +12,12 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-let curDay = 1
-const numEnabledDays = curDay > 25 ? 25 : curDay;
+let lastDayOfAoC = new Date(2022, 11, 25);
+let curDate = new Date();
+let curDay = new Date(Math.min(+lastDayOfAoC, +curDate)).getDate()
+const numEnabledDays = curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
-const playerList = initialiseScores(scores);
+const playerList = undefined
 
 function initialiseScores(scores: any) {
   let playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
@@ -29,7 +30,12 @@ function initialiseScores(scores: any) {
 
 
 function App() {
-  const [players, setPlayers] = useState<any[]>(playerList);
+  const [players, setPlayers] = useState<any[]>(playerList ?? []);
+  useEffect(() => {
+    import('./scores.json').then((score) => {
+      setPlayers(initialiseScores(score));
+    });
+  },[])
   const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
   const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.StarGain);
   const [showScoreboardInput, setShowScoreboardInput] = useState<boolean>(false);
@@ -40,6 +46,7 @@ function App() {
         <div className="privboard-row">
           <span className="privboard-days">
             {days.map((day, idx) => {
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               return day ? <a href="" className={""+(idx+1) === selectedDay ? 'bold':''} onClick={(ev) => {
                 ev.preventDefault()
                 ev.stopPropagation();
