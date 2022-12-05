@@ -24,10 +24,13 @@ jobs:
           path: ./src/scores.json
           contents: ${{env.fetch-api-data}}
           write-mode: overwrite
-      - name: Publish to gh-pages
+      - name: Install dependencies
         run: |
-          git config --global user.email "chce@netcompany.com"
-          git config --global user.name "Netcompany-AoC-DK"
           npm i
-          npm run deploy
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d build -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
