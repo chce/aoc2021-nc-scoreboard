@@ -1,6 +1,8 @@
-name: Refresh Feed
+name: Update Scores
 on:
   push:
+    branches:
+      - master
   schedule:
     - cron: '30 6,7,8,12,16 * * *'
 jobs:
