@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: LS
+        run: |
+          ls
       - name: Fetch Scores
         uses: JamesIves/fetch-api-data-action@v2
         with:
