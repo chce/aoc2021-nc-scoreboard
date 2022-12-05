@@ -12,8 +12,10 @@ const minuteInMs = 1000*60;
 const minuteInS = 60;
 const secondInMs = 1000;
 let days = new Array(25).fill(false);
-let curDay = 5
-const numEnabledDays = curDay > 25 ? 25 : curDay;
+let lastDayOfAoC = new Date(2022, 11, 25);
+let curDate = new Date();
+let curDay = new Date(Math.min(+lastDayOfAoC, +curDate)).getDate()
+const numEnabledDays = curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = undefined
 
