@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build REACT_APP_SCORES_PATH=./scores.json",
-    "build-gh-action": "react-scripts build REACT_APP_SCORES_PATH=../fetch/scores.json",
+    "build-gh-action": "react-scripts build REACT_APP_SCORES_PATH=../fetch-api-data-action/data.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
