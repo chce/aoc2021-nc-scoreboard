@@ -20,11 +20,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build REACT_APP_SCORES_PATH=./scores.json",
+    "build-gh-action": "react-scripts build REACT_APP_SCORES_PATH=../fetch/scores.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "deploy-gh-action": "gh-pages -d build "
   },
   "eslintConfig": {
     "extends": [

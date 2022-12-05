@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import scores from './scores.json';
+import { useEffect, useState } from 'react';
 import './App.css';
 enum HighscoreType {
   BothStars = 'bothstars',
@@ -16,7 +15,7 @@ let days = new Array(25).fill(false);
 let curDay = 1
 const numEnabledDays = curDay > 25 ? 25 : curDay;
 days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
-const playerList = initialiseScores(scores);
+const playerList = undefined
 
 function initialiseScores(scores: any) {
   const playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
@@ -28,7 +27,14 @@ function initialiseScores(scores: any) {
 
 
 function App() {
-  const [players, setPlayers] = useState<any[]>(playerList);
+  const [players, setPlayers] = useState<any[]>(playerList ?? []);
+  useEffect(() => {
+    console.log(process);
+    let a = import(process.env.REACT_APP_SCORES_PATH!).then((score) => {
+      debugger;
+      setPlayers(initialiseScores(score));
+    });
+  },[])
   const [selectedDay, setSelectedDay] = useState<string>(""+numEnabledDays);
   const [selectedScoreType, setSelectedScoreType] = useState<HighscoreType>(HighscoreType.StarGain);
   const [showScoreboardInput, setShowScoreboardInput] = useState<boolean>(false);

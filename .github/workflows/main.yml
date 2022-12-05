@@ -1,5 +1,7 @@
 name: Refresh Feed
-on: [push]
+on:
+  schedule:
+    - cron: '30 6,7,8,12,16 * * *'
 jobs:
   update-scores:
     runs-on: ubuntu-latest
@@ -9,7 +11,7 @@ jobs:
         with:
           endpoint: https://adventofcode.com/2022/leaderboard/private/view/2252784.json
           configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
-          save-location: '/src/scores.json'
+          save-location: '/fetch/scores.json'
       - name: Publish to gh-pages
         run: | 
           npm ci
