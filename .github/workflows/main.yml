@@ -26,6 +26,6 @@ jobs:
           write-mode: overwrite
       - name: Publish to gh-pages
         run: |
-          npm ci
+          npm i
           npm run deploy
         
