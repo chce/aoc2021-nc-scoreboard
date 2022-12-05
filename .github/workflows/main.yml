@@ -9,9 +9,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: LS
-        run: |
-          ls
       - name: Fetch Scores
         uses: JamesIves/fetch-api-data-action@v2
         with:
@@ -29,7 +26,6 @@ jobs:
           write-mode: overwrite
       - name: Publish to gh-pages
         run: |
-          cd src
-          ls 
-          cat scores.json
+          npm ci
+          npm run deploy
         
