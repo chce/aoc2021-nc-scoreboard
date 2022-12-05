@@ -14,6 +14,6 @@ jobs:
           configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
       - name: Publish to gh-pages
         run: | 
-          npm ci
+          npm i
           npm run deploy-gh-action
         
