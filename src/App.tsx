@@ -29,9 +29,7 @@ function initialiseScores(scores: any) {
 function App() {
   const [players, setPlayers] = useState<any[]>(playerList ?? []);
   useEffect(() => {
-    console.log(process);
     import('./scores.json').then((score) => {
-      debugger;
       setPlayers(initialiseScores(score));
     });
   },[])
