@@ -26,7 +26,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "deploy-gh-action": "gh-pages -d build REACT_APP_SCORES_PATH=../fetch-api-data-action/data.json"
+    "deploy-gh-action": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

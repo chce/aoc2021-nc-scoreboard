@@ -30,7 +30,7 @@ function App() {
   const [players, setPlayers] = useState<any[]>(playerList ?? []);
   useEffect(() => {
     console.log(process);
-    let a = import(process.env.REACT_APP_SCORES_PATH!).then((score) => {
+    let a = import('./scores.json').then((score) => {
       debugger;
       setPlayers(initialiseScores(score));
     });
