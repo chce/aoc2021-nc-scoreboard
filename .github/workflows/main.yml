@@ -17,6 +17,7 @@ jobs:
         with:
           endpoint: https://adventofcode.com/2022/leaderboard/private/view/2252784.json
           configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
+          debug: true
       - name: LSTwo
         run: |
           ls
@@ -29,5 +30,6 @@ jobs:
       - name: Publish to gh-pages
         run: |
           cd src
+          ls
           cat scores.json
         
