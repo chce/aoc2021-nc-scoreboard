@@ -15,4 +15,5 @@ jobs:
       - name: Publish to gh-pages
         run: | 
           npm ci
+          npm run deploy-gh-action
         
