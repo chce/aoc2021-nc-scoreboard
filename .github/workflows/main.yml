@@ -30,6 +30,6 @@ jobs:
       - name: Publish to gh-pages
         run: |
           cd src
-          ls
+          ls 
           cat scores.json
         
