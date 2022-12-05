@@ -12,13 +12,23 @@ jobs:
       - name: LS
         run: |
           ls
+          npm i
       - name: Fetch Scores
         uses: JamesIves/fetch-api-data-action@v2
         with:
           endpoint: https://adventofcode.com/2022/leaderboard/private/view/2252784.json
           configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
-          save-location: '/src/scores.json'
+      - name: LSTwo
+        run: |
+          ls
+          npm i
+      - name: Overwrite scores.json
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: ./src/scores.json
+          contents: ${{env.fetch-api-data}}
+          write-mode: overwrite
       - name: Publish to gh-pages
         run: |
-          npm i
+          ls
         
