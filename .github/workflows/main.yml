@@ -26,6 +26,8 @@ jobs:
           write-mode: overwrite
       - name: Publish to gh-pages
         run: |
+          git config --global user.email "chce@netcompany.com"
+          git config --global user.name "Autodeploy"
           npm i
           npm run deploy
         
