@@ -27,7 +27,7 @@ jobs:
       - name: Publish to gh-pages
         run: |
           git config --global user.email "chce@netcompany.com"
-          git config --global user.name "Autodeploy"
+          git config --global user.name "Netcompany-AoC-DK"
           npm i
           npm run deploy
         
