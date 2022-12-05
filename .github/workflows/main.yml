@@ -12,7 +12,6 @@ jobs:
       - name: LS
         run: |
           ls
-          npm i
       - name: Fetch Scores
         uses: JamesIves/fetch-api-data-action@v2
         with:
@@ -21,7 +20,6 @@ jobs:
       - name: LSTwo
         run: |
           ls
-          npm i
       - name: Overwrite scores.json
         uses: DamianReeves/write-file-action@master
         with:
@@ -30,5 +28,6 @@ jobs:
           write-mode: overwrite
       - name: Publish to gh-pages
         run: |
-          ls
+          cd src
+          cat scores.json
         
