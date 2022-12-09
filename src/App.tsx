@@ -5,6 +5,7 @@ enum HighscoreType {
   Delta = 'delta',
   StarGain = 'stargain',
   FirstStar = 'firststar',
+  Total = 'total',
 }
 const hourInMs = 1000*60*60;
 const hourInS = 60*60;
@@ -20,7 +21,8 @@ days = days.map((_, idx) => idx+1 > numEnabledDays ? false : true)
 const playerList = undefined
 
 function initialiseScores(scores: any) {
-  let playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members));
+
+  let playerList = sortPlayersForDay(""+numEnabledDays, HighscoreType.BothStars, Object.entries(scores.members))
   for (let i = 0; i < numEnabledDays; i++) {
     insertStarGainsForDay(""+(i+1), playerList);
   }
@@ -33,6 +35,7 @@ function App() {
   const [players, setPlayers] = useState<any[]>(playerList ?? []);
   useEffect(() => {
     import('./scores.json').then((score) => {
+      new URLSearchParams(window.location.search).get('ex')?.split(',').forEach(id => (score as any).members[id] ? delete (score as any).members[id] : 0);
       setPlayers(initialiseScores(score));
     });
   },[])
@@ -67,6 +70,7 @@ function App() {
               <option value={HighscoreType.FirstStar}>Time to first star</option>
               <option value={HighscoreType.Delta}>Time between star 1 and 2</option>
               <option value={HighscoreType.StarGain}>Points gained</option>
+              <option value={HighscoreType.Total}>Total at day {selectedDay}</option>
       </select>
 
         {players.map((player, idx) => {
@@ -101,6 +105,8 @@ function sortPlayersForDay(day: string, highscoreType: HighscoreType, playerList
       return starGainSort(day, playerList);
     case HighscoreType.FirstStar:
       return firstStarSort(day, playerList);
+    case HighscoreType.Total:
+      return totalScoreSort(day, playerList);
   }
 }
 function bothStarsSort(day: string, playerList: any[]): any[] {
@@ -134,6 +140,19 @@ function deltaDaySort(day: string, playerList: any[]) {
     }
     return 0;
   });
+}
+
+// You can get away with all kinds of sickening complexity when N < 200
+function totalScoreSort(day: string, playerList: any[]) {
+  return [...playerList].sort((playerA, playerB) => {
+    let a = 0;
+    let b = 0;
+    for (let i = 1; i <= +day; i++) {
+      a+=getTotalPointGainForDay(i, playerA[1]);
+      b+=getTotalPointGainForDay(i, playerB[1]);
+    }
+    return b-a;
+  })
 }
 
 function starGainSort(day: string, playerList: any[]) {
@@ -220,7 +239,19 @@ function renderPlayerTime(player: any, selectedDay: string, highscoreType: Highs
     let star1Gain = player.completion_day_level?.[selectedDay]?.["1"]?.star_gain;
     let star2Gain = player.completion_day_level?.[selectedDay]?.["2"]?.star_gain;
     return <><span className="privboard-star-firstonly">{star1Gain}</span>{' / '}<span className="privboard-star-both">{star2Gain}</span>{' -> '}<span className="privboard-star-both">{(star1Gain??0)+(star2Gain??0)}</span></>;
+  } else if (highscoreType === HighscoreType.Total) {
+    let total = 0;
+    for (let i = 1; i <= +selectedDay; i++) {
+      total += getTotalPointGainForDay(i,player);
+    }
+    return total
   }
+}
+
+function getTotalPointGainForDay(day: number, player: any) {
+  let star1Gain = player.completion_day_level?.[''+day]?.["1"]?.star_gain;
+  let star2Gain = player.completion_day_level?.[''+day]?.["2"]?.star_gain;
+  return star1Gain+star2Gain;
 }
 
 function renderPlayerDeltaTimestamp(player: any, selectedDay: string) {
@@ -252,7 +283,7 @@ function getPlacementClass(idx: number) {
 
 function renderPlayer(player: any, selectedDay: string, idx: number, highscoreType: HighscoreType) {
   return (
-    <div className="privboard-row">
+    <div className="privboard-row" title={player.id}>
       <span className="privboard-position">{idx+1})</span> {renderPlayerTime(player, selectedDay, highscoreType)} <span className={`privboard-name ${getPlacementClass(idx)} ${player.name === null ? 'leaderboard-anon' : ''}`}>{player.name ?? `(anonymous user #${player.id})`}</span></div>
   )
 }
