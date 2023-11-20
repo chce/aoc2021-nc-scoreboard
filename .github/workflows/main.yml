@@ -15,7 +15,7 @@ jobs:
         uses: JamesIves/fetch-api-data-action@v2
         with:
           endpoint: https://adventofcode.com/2023/leaderboard/private/view/2252784.json
-          configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}"} }'
+          configuration: '{ "method": "GET", "headers": {"cookie": "session=${{ secrets.SESSION_COOKIE }}", "User-Agent": "https://github.com/Netcompany-AoC-DK/aoc-nc-scoreboard by tfe@netcompany.com and chce@netcompany.com"} }'
           debug: true
       - name: LSTwo
         run: |
