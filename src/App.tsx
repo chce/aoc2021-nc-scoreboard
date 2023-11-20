@@ -46,20 +46,25 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="privboard-row">
-          <span className="privboard-days">
-            {days.map((day, idx) => {
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              return day ? <a href="" className={""+(idx+1) === selectedDay ? 'bold':''} onClick={(ev) => {
-                ev.preventDefault()
-                ev.stopPropagation();
-                setSelectedDay(""+(idx+1));
-                setPlayers(sortPlayersForDay(""+(idx+1), selectedScoreType, players));
-              }}>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</a> : <span>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</span>
-            })}
-          </span>
-        </div>
+        <h1>
+          <span>Netcompany - AoC 2023</span>
+          <br />
+          <a href="https://afterdark.netcompany.com/event/advent-of-code-2023-dk-nl/">AfterDark</a>
+        </h1>
       </header>
+      <div className="privboard-row">
+        <span className="privboard-days">
+          {days.map((day, idx) => {
+            // eslint-disable-next-line jsx-a11y/anchor-is-valid
+            return day ? <a href="" className={""+(idx+1) === selectedDay ? 'bold':''} onClick={(ev) => {
+              ev.preventDefault()
+              ev.stopPropagation();
+              setSelectedDay(""+(idx+1));
+              setPlayers(sortPlayersForDay(""+(idx+1), selectedScoreType, players));
+            }}>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</a> : <span>{(idx+1).toString().split('').map((dayNumber, dayNumberIdx) => <>{dayNumberIdx > 0 ? <br/> : <></>}{dayNumber}</>)}</span>
+          })}
+        </span>
+      </div>
       <section>
       <select value={selectedScoreType} onChange={(ev) => {
         const scoreType = ev.target.value as HighscoreType;
