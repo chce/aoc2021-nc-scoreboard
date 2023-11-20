@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300');
+
 body {
   background: #002624; /*Darkened NC-green*/
   color: #cccccc;
   font-family: "Source Code Pro", monospace;
+  font-weight: 300;
   font-size: 14pt;
   min-width: 60em;
   padding: 10px 16px;
@@ -142,13 +145,17 @@ header {
   cursor: default;
   z-index: 100;
   margin-bottom: 2em;
+  text-align: center;
 }
 header h1 {
   display: inline-block;
+  text-align: right;
   margin: 0;
-  padding-right: 1em;
 }
-header h1 a, header h1 span {
+header h1 span {
+  font-size: 1.2em;
+}
+header h1 a {
   display: inline-block;
   text-decoration: none;
   color: #00cc00;
